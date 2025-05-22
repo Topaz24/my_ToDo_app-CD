@@ -15,7 +15,3 @@ apt-get update -y
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 usermod -aG docker ubuntu
 docker run -d --name myapp -e DB_NAME=ToDoDB -e DB_USER=todo_user -e DB_PASSWORD=1234 -e DB_HOST=172.31.30.100 -p 5000:5000 toph2490/my_to_do_list
-
-
-
-

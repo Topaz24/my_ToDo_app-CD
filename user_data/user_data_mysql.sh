@@ -15,4 +15,3 @@ apt-get update -y
 apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 docker run --restart unless-stopped -d -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=ToDoDB -e MYSQL_USER=todo_user -e MYSQL_PASSWORD=1234 -v sql_data:/var/lib/mysql -p 3306:3306 mysql:8.0
-
