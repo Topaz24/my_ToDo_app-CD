@@ -1,0 +1,15 @@
+app_image: toph2490/my_to_do_list
+prod_tag: 5
+stage_tag: 5
+
+db_image: mysql
+db_tag: "8.0"
+db_root_password: rootpassword
+db_name: ToDoDB
+db_user: todo_user
+db_password: 1234
+
+nginx_image: nginx
+nginx_tag: latest
+
+db_host: "{{ hostvars['db1'].ansible_host }}"
