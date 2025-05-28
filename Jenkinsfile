@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = 'toph2490/my_to_do_list'
-        EMAIL = 'mail@gmail.com'
+        EMAIL = 'toph2913@gmail.com'
         REMOTE_USER = 'ubuntu'
         REMOTE_HOST_STAGE = '172.31.40.99'
         REMOTE_HOST_PRODUCTION = '172.31.40.242'
@@ -82,7 +82,7 @@ pipeline {
                 script {
                     def msg = ''
                     if (env.VERSION && env.ENVIRONMENT) {
-                          msg = "success to deploy ${env.ENVIRONMENT} version ${env.VERSION}  http://stage.yp3yp3.online/"
+                          msg = "success to deploy ${env.ENVIRONMENT} version ${env.VERSION}  http://stage.Topaz24.online/"
                     } else {
                          msg = "success"
                     }
