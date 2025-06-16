@@ -1,4 +1,4 @@
-# Local .terraform directories
+# Ignore local .terraform directories
 **/.terraform/*
 
 # Ignore variables files
