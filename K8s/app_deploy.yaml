@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ToDo_app
+  name: ToDo_app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ToDo_app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ToDo_app
+    spec:
+      containers:
+      - image: toph2490/my_to_do_list
+        name: myapp
+        resources: {}
+        env:
+         - name: DB_HOST
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: DB_HOST
+         - name: DB_NAME
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: MYSQL_DATABASE
+         - name: DB_USER
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: MYSQL_USER
+         - name: DB_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: ToDo_app
+               key: MYSQL_PASSWORD
+status: {}

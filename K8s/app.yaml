@@ -1,0 +1,252 @@
+apiVersion: v1
+data:
+  APP_1_HOST: todo_svc
+  DB_HOST: mysql_svc
+  MYSQL_DATABASE: ToDoDB
+  MYSQL_USER: todo_user
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: ToDo_app
+---
+apiVersion: v1
+data:
+  MYSQL_PASSWORD: MTIzNA==
+  MYSQL_ROOT_PASSWORD: cm9vdHBhc3N3b3Jk
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: ToDo_app
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mysql
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        resources: {}
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ToDo_app
+                key: MYSQL_ROOT_PASSWORD
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ToDo_app
+                key: MYSQL_PASSWORD
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: ToDo_app
+                key: MYSQL_DATABASE
+          - name: MYSQL_USER
+            valueFrom:
+              configMapKeyRef:
+                name: ToDo_app
+                key: MYSQL_USER
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mysql
+  name: mysql_svc
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mysql
+  type: clusterIp
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ToDo_app
+  name: ToDo_app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ToDo_app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ToDo_app
+    spec:
+      containers:
+      - image: toph2490/my_to_do_list
+        name: myapp
+        resources: {}
+        env:
+         - name: DB_HOST
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: DB_HOST
+         - name: DB_NAME
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: MYSQL_DATABASE
+         - name: DB_USER
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app
+               key: MYSQL_USER
+         - name: DB_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: ToDo_app
+               key: MYSQL_PASSWORD
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ToDo_app
+  name: todo_svc
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: ToDo_app
+  type: clusterIp
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ToDo_app_stage
+  name: ToDo_app_stage
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ToDo_app_stage
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ToDo_app_stage
+    spec:
+      containers:
+      - image: toph2490/my_to_do_list
+        name: myapp
+        resources: {}
+        env:
+         - name: DB_HOST
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app_stage
+               key: DB_HOST
+         - name: DB_NAME
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app_stage
+               key: MYSQL_DATABASE
+         - name: DB_USER
+           valueFrom:
+             configMapKeyRef:
+               name: ToDo_app_stage
+               key: MYSQL_USER
+         - name: DB_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: ToDo_app_stage
+               key: MYSQL_PASSWORD
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ToDo_app_stage
+  name: todo_stage_svc
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: ToDo_app_stage
+  type: clusterIp
+status:
+  loadBalancer: {}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: null
+  name: ToDo
+spec:
+  rules:
+  - host: todo.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: todo_svc
+            port:
+              number: 5000
+        path: /
+        pathType: Prefix
+  - host: stage.todo.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: todo_stage_svc
+            port:
+              number: 5000
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}
