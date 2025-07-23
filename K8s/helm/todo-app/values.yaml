@@ -1,0 +1,39 @@
+app:
+  Deployment:
+    replicas: 2
+    min: 2
+    max: 3
+    cpu: 60
+    image: toph2490/my_to_do_list
+    tag: latest
+  Service:
+    type: ClusterIP
+    port: 5000
+    name: todo-svc
+app_stage:
+  Deployment:
+    image: toph2490/my_to_do_list
+    tag: 3
+  Service:
+    type: ClusterIP
+    port: 5000
+    name: todo-stage-svc
+mysql:
+  pvc:
+    storageClassName: gp2
+    storage: 500Mi
+  root_password: cGFzc3dvcmQ=
+  user: user
+  password: cGFzcw==
+  database: todo_db
+  host: mysql-service
+  Secret_name: todo-app
+  ConfigMap_name: todo-app
+  image_version: 8.0
+  service:
+    port: 3306
+    name: mysql-svc
+ingress:
+  app_host: todo.toph2490.site
+  stage_host: stage.todo.toph2490.site
+  ingressClassName: nginx
