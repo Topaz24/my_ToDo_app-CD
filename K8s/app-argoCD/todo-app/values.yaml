@@ -13,7 +13,7 @@ app:
 app_stage:
   Deployment:
     image: toph2490/my_to_do_list
-    tag: 3
+    tag: myapp
   Service:
     type: ClusterIP
     port: 5000
