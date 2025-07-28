@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME = 'toph2490/my_to_do_list'
-        EMAIL = 'toph2913@gmail.com'
+        EMAIL = 'atopp7115@gmail.com'
         REMOTE_USER = 'ubuntu'
         REMOTE_HOST_STAGE = '172.31.40.99'
         REMOTE_HOST_PRODUCTION = '172.31.40.242'
@@ -63,13 +63,7 @@ pipeline {
                     } else {
                          msg = "FAILED "
                     }
-                
-                slackSend(
-                    channel: '#jenkins',
-                    color: 'danger',
-                    message: msg
-                )
-                
+               
                 emailext(
                     subject: "${JOB_NAME}.${BUILD_NUMBER} FAILED",
                     mimeType: 'text/html',
@@ -82,17 +76,11 @@ pipeline {
                 script {
                     def msg = ''
                     if (env.VERSION && env.ENVIRONMENT) {
-                          msg = "success to deploy ${env.ENVIRONMENT} version ${env.VERSION}  http://stage.Topaz24.online/"
+                          msg = "success to deploy ${env.ENVIRONMENT} version ${env.VERSION}  http://prod.Topaz24.online/"
                     } else {
                          msg = "success"
                     }
-                    
-                
-                slackSend(
-                    channel: '#jenkins',
-                    color: 'good',
-                    message: msg
-                )
+                  
                 emailext(
                     subject: "${JOB_NAME}.${BUILD_NUMBER} PASSED",
                     mimeType: 'text/html',
