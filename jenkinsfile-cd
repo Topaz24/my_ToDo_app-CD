@@ -4,9 +4,9 @@ pipeline {
         IMAGE_NAME = 'toph2490/my_to_do_list'
         EMAIL = 'atopp7115@gmail.com'
         REMOTE_USER = 'ubuntu'
-        REMOTE_HOST_STAGE = '172.31.40.99'
-        REMOTE_HOST_PRODUCTION = '172.31.40.242'
-        DB_HOST = '172.31.42.89'
+        REMOTE_HOST_STAGE = '172.31.24.54'
+        REMOTE_HOST_PRODUCTION = '172.31.26.85'
+        DB_HOST = '172.31.22.239'
 
     }
     stages {
