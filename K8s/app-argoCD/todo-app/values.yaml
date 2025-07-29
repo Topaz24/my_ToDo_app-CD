@@ -5,7 +5,7 @@ app:
     max: 3
     cpu: 60
     image: toph2490/my_to_do_list
-    tag: "23"
+    tag: "24"
   Service:
     type: ClusterIP
     port: 5000
@@ -13,7 +13,7 @@ app:
 app_stage:
   Deployment:
     image: toph2490/my_to_do_list
-    tag: "23"
+    tag: "24"
   Service:
     type: ClusterIP
     port: 5000
